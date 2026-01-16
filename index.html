@@ -1,73 +1,41 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
 <title>Live Poll Login</title>
-
 <style>
-body {
-    margin: 0;
-    height: 100vh;
-    font-family: "Segoe UI", sans-serif;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    display: flex;
-    justify-content: center;
-    align-items: center;
+body{
+    font-family: Arial;
+    background: linear-gradient(135deg,#667eea,#764ba2);
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
 }
-
-.card {
-    background: white;
-    padding: 30px;
-    width: 320px;
-    border-radius: 12px;
-    box-shadow: 0 15px 30px rgba(0,0,0,0.2);
-    text-align: center;
+.card{
+    background:#fff;
+    padding:30px;
+    border-radius:10px;
+    width:300px;
+    text-align:center;
 }
-
-.card h2 {
-    margin-bottom: 20px;
-    color: #333;
+input,button{
+    width:100%;
+    padding:10px;
+    margin:10px 0;
 }
-
-input {
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 15px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    outline: none;
-    font-size: 14px;
-}
-
-button {
-    width: 100%;
-    padding: 12px;
-    background: #667eea;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 15px;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-button:hover {
-    background: #5a67d8;
-}
-
-#msg {
-    margin-top: 12px;
-    color: red;
-    font-size: 14px;
+button{
+    background:#667eea;
+    color:white;
+    border:none;
+    cursor:pointer;
 }
 </style>
 </head>
-
 <body>
 
 <div class="card">
-    <h2>Live Poll Login</h2>
-    <input id="username" placeholder="Enter username">
+    <h2>Login</h2>
+    <input id="username" placeholder="Username">
     <button onclick="login()">Login</button>
     <p id="msg"></p>
 </div>
@@ -75,21 +43,21 @@ button:hover {
 <script>
 const API = "https://polling-backend-5jhn.onrender.com";
 
-function login() {
+function login(){
     const username = document.getElementById("username").value;
 
-    fetch(API + "/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username })
+    fetch(API + "/login",{
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body:JSON.stringify({username})
     })
-    .then(res => res.json())
-    .then(data => {
-        if (data.success) {
-            localStorage.setItem("user", username);
-            window.location = "poll.html";
-        } else {
-            document.getElementById("msg").innerText = data.msg;
+    .then(res=>res.json())
+    .then(data=>{
+        if(data.success){
+            localStorage.setItem("user",username);
+            window.location="poll.html";
+        }else{
+            document.getElementById("msg").innerText=data.msg;
         }
     });
 }
