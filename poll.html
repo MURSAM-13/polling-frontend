@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Live Poll</title>
+<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+
+<style>
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: "Segoe UI", sans-serif;
+    background: linear-gradient(135deg, #43cea2, #185a9d);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.poll-box {
+    background: white;
+    width: 360px;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+}
+
+.poll-box h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.option {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.option button {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    background: #185a9d;
+    color: white;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.option button:hover {
+    background: #144a82;
+}
+
+.count {
+    margin-left: 10px;
+    font-weight: bold;
+    color: #333;
+}
+
+#msg {
+    margin-top: 15px;
+    text-align: center;
+    color: red;
+    font-size: 14px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="poll-box">
+    <h2>Live Poll</h2>
+
+    <div class="option">
+        <button onclick="vote(0)">Option A</button>
+        <span class="count" id="v0">0</span>
+    </div>
+
+    <div class="option">
+        <button onclick="vote(1)">Option B</button>
+        <span class="count" id="v1">0</span>
+    </div>
+
+    <div class="option">
+        <button onclick="vote(2)">Option C</button>
+        <span class="count" id="v2">0</span>
+    </div>
+
+    <div class="option">
+        <button onclick="vote(3)">Option D</button>
+        <span class="count" id="v3">0</span>
+    </div>
+
+    <p id="msg"></p>
+</div>
+
+<script>
+const API = "https://polling-backend-5jhn.onrender.com";
+const socket = io(API);
+const username = localStorage.getItem("user");
+
+socket.on("update", votes => {
+    votes.forEach((v, i) => {
+        document.getElementById("v" + i).innerText = v;
+    });
+});
+
+function vote(option) {
+    fetch(API + "/vote", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ option, username })
