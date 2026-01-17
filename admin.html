@@ -53,6 +53,10 @@ function refreshStatus() {
         data.poll_active
           ? "🟢 Poll is ACTIVE"
           : "🔴 Poll is INACTIVE";
+    })
+    .catch(() => {
+      document.getElementById("msg").innerText =
+        "❌ Backend not reachable";
     });
 }
 
@@ -67,12 +71,31 @@ function adminAction(endpoint) {
   .then(res => res.json())
   .then(data => {
     document.getElementById("msg").innerText = data.msg;
-    setTimeout(refreshStatus, 300);
+    refreshStatus();
+  })
+  .catch(() => {
+    document.getElementById("msg").innerText =
+      "❌ Action failed";
   });
 }
 
+/* ✅ MISSING FUNCTIONS — THIS IS THE FIX */
+function startPoll() {
+  adminAction("/admin/start");
+}
+
+function endPoll() {
+  adminAction("/admin/end");
+}
+
+function resetPoll() {
+  adminAction("/admin/reset");
+}
+
+/* Load status on page load */
 refreshStatus();
 </script>
+
 
 
 
