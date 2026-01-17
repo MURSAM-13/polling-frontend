@@ -43,27 +43,33 @@
   <p id="msg"></p>
 
 <script>
-const API = "https://polling-backend.onrender.com"; // CHANGE if needed
+const API = "https://polling-backend-5jhn.onrender.com";
+
+function refreshStatus() {
+  fetch(API + "/status")
+    .then(r => r.json())
+    .then(d => {
+      document.getElementById("msg").innerText =
+        d.poll_active ? "🟢 Poll is ACTIVE" : "🔴 Poll is INACTIVE";
+    });
+}
 
 function adminAction(url) {
   fetch(API + url, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      key: document.getElementById("key").value
-    })
+    body: JSON.stringify({ key: key.value })
   })
-  .then(res => res.json())
-  .then(data => {
-    document.getElementById("msg").innerText =
-      data.msg || (data.success ? "Success" : "Failed");
+  .then(r => r.json())
+  .then(d => {
+    document.getElementById("msg").innerText = d.msg;
+    refreshStatus();
   });
 }
 
-function startPoll() { adminAction("/admin/start"); }
-function endPoll()   { adminAction("/admin/end"); }
-function resetPoll() { adminAction("/admin/reset"); }
+refreshStatus();
 </script>
+
 
 </body>
 </html>
