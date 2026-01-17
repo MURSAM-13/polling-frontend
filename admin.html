@@ -47,28 +47,33 @@ const API = "https://polling-backend-5jhn.onrender.com";
 
 function refreshStatus() {
   fetch(API + "/status")
-    .then(r => r.json())
-    .then(d => {
+    .then(res => res.json())
+    .then(data => {
       document.getElementById("msg").innerText =
-        d.poll_active ? "🟢 Poll is ACTIVE" : "🔴 Poll is INACTIVE";
+        data.poll_active
+          ? "🟢 Poll is ACTIVE"
+          : "🔴 Poll is INACTIVE";
     });
 }
 
-function adminAction(url) {
-  fetch(API + url, {
+function adminAction(endpoint) {
+  fetch(API + endpoint, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ key: key.value })
+    body: JSON.stringify({
+      key: document.getElementById("key").value
+    })
   })
-  .then(r => r.json())
-  .then(d => {
-    document.getElementById("msg").innerText = d.msg;
-    refreshStatus();
+  .then(res => res.json())
+  .then(data => {
+    document.getElementById("msg").innerText = data.msg;
+    setTimeout(refreshStatus, 300);
   });
 }
 
 refreshStatus();
 </script>
+
 
 
 </body>
