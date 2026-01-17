@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Dashboard</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #0f172a;
+      color: white;
+      text-align: center;
+      padding-top: 80px;
+    }
+    button {
+      padding: 12px 25px;
+      margin: 10px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .start { background: #22c55e; }
+    .end { background: #f97316; }
+    .reset { background: #ef4444; }
+    input {
+      padding: 10px;
+      border-radius: 5px;
+      border: none;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>🛠 Admin Dashboard</h1>
+
+  <input id="key" type="password" placeholder="Admin Key" />
+  <br>
+
+  <button class="start" onclick="startPoll()">Start Poll</button>
+  <button class="end" onclick="endPoll()">End Poll</button>
+  <button class="reset" onclick="resetPoll()">Reset Poll</button>
+
+  <p id="msg"></p>
+
+<script>
+const API = "https://polling-backend.onrender.com"; // CHANGE if needed
+
+function adminAction(url) {
+  fetch(API + url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      key: document.getElementById("key").value
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    document.getElementById("msg").innerText =
+      data.msg || (data.success ? "Success" : "Failed");
+  });
+}
+
+function startPoll() { adminAction("/admin/start"); }
+function endPoll()   { adminAction("/admin/end"); }
+function resetPoll() { adminAction("/admin/reset"); }
+</script>
+
+</body>
+</html>
